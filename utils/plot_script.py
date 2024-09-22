@@ -55,7 +55,11 @@ def plot_3d_motion(save_path, kinematic_tree, mp_joints, title, figsize=(10, 10)
     #         return ax
 
     fig = plt.figure(figsize=figsize)
-    ax = p3.Axes3D(fig)
+    # ax = p3.Axes3D(fig)
+
+    # plt.tight_layout()
+    ax = fig.add_subplot(111, projection="3d")
+    
     init()
 
     mp_data = []
@@ -101,8 +105,10 @@ def plot_3d_motion(save_path, kinematic_tree, mp_joints, title, figsize=(10, 10)
 
     def update(index):
         #         print(index)
-        ax.lines = []
-        ax.collections = []
+        # ax.clear()
+        ax.cla()
+        # ax.lines = []
+        # ax.collections = []
         ax.view_init(elev=120, azim=-90)
         ax.dist = 15#7.5
         #         ax =

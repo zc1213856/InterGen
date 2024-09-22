@@ -64,13 +64,13 @@ class InterGen(nn.Module):
             pe_tokens = x + self.positional_embedding.type(self.dtype)
             x = pe_tokens.permute(1, 0, 2)  # NLD -> LND
             x = self.clip_transformer(x)
-            x = x.permute(1, 0, 2)
+            x = x.permute(1, 0, 2) # 1, 77, 168
             clip_out = self.ln_final(x).type(self.dtype)
 
         out = self.clipTransEncoder(clip_out)
         out = self.clip_ln(out)
 
-        cond = out[torch.arange(x.shape[0]), text.argmax(dim=-1)]
+        cond = out[torch.arange(x.shape[0]), text.argmax(dim=-1)] # 1, 768
         batch["cond"] = cond
 
         return batch
