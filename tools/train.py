@@ -10,8 +10,10 @@ from os.path import join as pjoin
 from torch.utils.tensorboard import SummaryWriter
 from models import *
 
-os.environ['PL_TORCH_DISTRIBUTED_BACKEND'] = 'nccl'
+# os.environ['PL_TORCH_DISTRIBUTED_BACKEND'] = 'nccl'
 from lightning.pytorch.strategies import DDPStrategy
+from lightning.pytorch.strategies import SingleDeviceStrategy
+
 torch.set_float32_matmul_precision('medium')
 
 class LitTrainModel(pl.LightningModule):
@@ -144,16 +146,19 @@ if __name__ == '__main__':
                 ckpt["state_dict"][k.replace("model.", "")] = ckpt["state_dict"].pop(k)
         model.load_state_dict(ckpt["state_dict"], strict=True)
         print("checkpoint state loaded!")
-    litmodel = LitTrainModel(model, train_cfg)
-
+    litmodel = LitTrainModel(model, train_cfg).to('cuda')
+    # litmodel = litmodel.to('cuda' if torch.cuda.is_available() else 'cpu')
 
     checkpoint_callback = pl.callbacks.ModelCheckpoint(dirpath=litmodel.model_dir,
                                                        every_n_epochs=train_cfg.TRAIN.SAVE_EPOCH)
     trainer = pl.Trainer(
         default_root_dir=litmodel.model_dir,
-        devices="auto", accelerator='gpu',
+        devices=1,
+        # devices=1,
+        accelerator='gpu',
         max_epochs=train_cfg.TRAIN.EPOCH,
-        strategy=DDPStrategy(find_unused_parameters=True),
+        # strategy=DDPStrategy(find_unused_parameters=True),
+        strategy = "auto",
         precision=32,
         callbacks=[checkpoint_callback],
 

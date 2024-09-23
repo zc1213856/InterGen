@@ -13,7 +13,7 @@ TRAIN:
   SAVE_STEPS: 20000
   SAVE_EPOCH: 10
   RESUME: #checkpoints/IG-S/8/model/epoch=99-step=17600.ckpt
-  NUM_WORKERS: 2
+  NUM_WORKERS: 0
   MODE: finetune
   LAST_EPOCH: 0
   LAST_ITER: 0
