@@ -55,22 +55,25 @@ class InterGen(nn.Module):
 
     def text_process(self, batch):
         device = next(self.clip_transformer.parameters()).device
-        raw_text = batch["text"]
+        # raw_text = batch["text"]
 
-        with torch.no_grad():
+        # with torch.no_grad():
 
-            text = clip.tokenize(raw_text, truncate=True).to(device)
-            x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
-            pe_tokens = x + self.positional_embedding.type(self.dtype)
-            x = pe_tokens.permute(1, 0, 2)  # NLD -> LND
-            x = self.clip_transformer(x)
-            x = x.permute(1, 0, 2) # 1, 77, 168
-            clip_out = self.ln_final(x).type(self.dtype)
+        #     text = clip.tokenize(raw_text, truncate=True).to(device)
+        #     x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
+        #     pe_tokens = x + self.positional_embedding.type(self.dtype)
+        #     x = pe_tokens.permute(1, 0, 2)  # NLD -> LND
+        #     x = self.clip_transformer(x)
+        #     x = x.permute(1, 0, 2) # 1, 77, 168
+        #     clip_out = self.ln_final(x).type(self.dtype)
 
-        out = self.clipTransEncoder(clip_out)
-        out = self.clip_ln(out)
+        # out = self.clipTransEncoder(clip_out)
+        # out = self.clip_ln(out)
 
-        cond = out[torch.arange(x.shape[0]), text.argmax(dim=-1)] # 1, 768
-        batch["cond"] = cond
+        # cond = out[torch.arange(x.shape[0]), text.argmax(dim=-1)] # 1, 768
+
+        # batch["cond"] = cond
+
+        batch["cond"] = torch.zeros(1, 768).type(self.dtype).to(device)
 
         return batch

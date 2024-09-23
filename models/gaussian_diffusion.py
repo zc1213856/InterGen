@@ -1136,7 +1136,10 @@ class GaussianDiffusion:
             model_kwargs = {}
         if noise is None:
             noise = th.randn_like(x_start)
+        # x_start 8, 300, 524    
+        xt_a, xt_b = x_start[...,:262], x_start[...,262:]
         x_t = self.q_sample(x_start, t, noise=noise)
+        x_t[..., :262] = xt_a
 
         ######################### fine-tuning for control #################################
         if control:

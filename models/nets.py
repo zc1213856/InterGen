@@ -101,7 +101,7 @@ class InterDenoiser(nn.Module):
 
         # Input Embedding
         self.motion_embed = nn.Linear(self.input_feats, self.latent_dim)
-        self.text_embed = nn.Linear(self.text_emb_dim, self.latent_dim)
+        # self.text_embed = nn.Linear(self.text_emb_dim, self.latent_dim)
 
         self.blocks = nn.ModuleList()
         for i in range(num_layers):
@@ -121,8 +121,9 @@ class InterDenoiser(nn.Module):
         if mask is not None:
             mask = mask[...,0]
 
-        emb = self.embed_timestep(timesteps) + self.text_embed(cond)
+        # emb = self.embed_timestep(timesteps) + self.text_embed(cond)
 
+        emb = self.embed_timestep(timesteps)
         a_emb = self.motion_embed(x_a)
         b_emb = self.motion_embed(x_b)
         h_a_prev = self.sequence_pos_encoder(a_emb)
