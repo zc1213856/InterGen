@@ -72,6 +72,10 @@ class LitTrainModel(pl.LightningModule):
 
 
     def training_step(self, batch, batch_idx):
+        # ############ get clip test data
+        # import joblib
+        # joblib.dump(batch, 'mini_batch_test_data.joblib')
+        # ############
         loss, loss_logs = self.forward(batch)
         opt = self.optimizers()
         opt.zero_grad()

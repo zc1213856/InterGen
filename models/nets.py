@@ -258,6 +258,8 @@ class InterDiffusion(nn.Module):
             model_kwargs={
                 "mask":None,
                 "cond":cond,
+                "x_a_0":batch["x_a_0"],
+                "x_b_0":batch["x_b_0"]
             },
             x_start=None)
         return {"output":output}

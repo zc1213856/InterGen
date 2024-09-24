@@ -7,7 +7,7 @@ class ClassifierFreeSampleModel(nn.Module):
         self.model = model  # model is the actual model to run
         self.s = cfg_scale
 
-    def forward(self, x, timesteps, cond=None, mask=None):
+    def forward(self, x, timesteps, cond=None, mask=None, **kwargs):
         B, T, D = x.shape
 
         x_combined = torch.cat([x, x], dim=0)

@@ -988,6 +988,13 @@ class GaussianDiffusion:
             raise NotImplementedError()
         if const_noise == True:
             raise NotImplementedError()
+        
+        #######################
+        if device is None:
+            device = next(model.parameters()).device
+        noise = th.randn(*shape, device=device) # [1, 210, 524]
+        noise[..., :262] = model_kwargs["x_a_0"]
+        #######################
 
         # final = []
         for i, sample in enumerate(self.ddim_sample_loop_progressive(
@@ -1042,7 +1049,7 @@ class GaussianDiffusion:
         if noise is not None:
             img = noise
         else:
-            img = th.randn(*shape, device=device)
+            img = th.randn(*shape, device=device) # [1, 210, 524]
 
         if skip_timesteps and init_image is None:
             init_image = th.zeros_like(img)

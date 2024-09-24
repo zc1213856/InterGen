@@ -6,6 +6,8 @@ import torch
 import lightning as L
 import scipy.ndimage.filters as filters
 
+import joblib
+
 from os.path import join as pjoin
 from models import *
 from collections import OrderedDict
@@ -13,6 +15,7 @@ from configs import get_config
 from utils.plot_script import *
 from utils.preprocess import *
 from utils import paramUtil
+
 
 class LitGenModel(L.LightningModule):
     def __init__(self, model, cfg):
@@ -58,12 +61,21 @@ class LitGenModel(L.LightningModule):
         batch["prompt"] = prompt
 
         window_size = 210
+        ################# 24.9.24 mini batch trainning data -> x0 replace condition
+        minibatch = joblib.load('mini_batch_test_data.joblib')
+        prompt = minibatch[1][0]
+        device = batch["motion_lens"][:].device
+        batch["x_a_0"] = minibatch[2][0:1, :window_size, :].to(device)
+        batch["x_b_0"] = minibatch[3][0:1, :window_size, :].to(device)
+        # batch["x_a_0"] = minibatch[]
+        #################
         motion_output = self.generate_loop(batch, window_size)
         result_path = f"results/{name}.mp4"
         if not os.path.exists("results"):
             os.makedirs("results")
-
-        self.plot_t2m([motion_output[0], motion_output[1]],
+        x_a_0 = batch["x_a_0"][0].cpu().detach().numpy()
+        x_a_0 = x_a_0[:,:22*3].reshape(-1,22,3)
+        self.plot_t2m([motion_output[0], motion_output[1], x_a_0],
                       result_path,
                       batch["prompt"])
 
@@ -73,7 +85,6 @@ class LitGenModel(L.LightningModule):
         batch["motion_lens"][:] = window_size
 
         sequences = [[], []]
-
         batch["text"] = [prompt]
         batch = self.model.forward_test(batch)
         motion_output_both = batch["output"][0].reshape(batch["output"][0].shape[0], 2, -1)
