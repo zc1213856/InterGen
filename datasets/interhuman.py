@@ -72,7 +72,7 @@ class InterHumanDataset(data.Dataset):
                     texts_swap = [item.replace("\n", "").replace("left", "tmp").replace("right", "left").replace("tmp", "right")
                                   .replace("clockwise", "tmp").replace("counterclockwise","clockwise").replace("tmp","counterclockwise") for item in texts]
 
-                    motion1, motion1_swap = load_motion(file_path_person1, self.min_length, swap=True)
+                    motion1, motion1_swap = load_motion(file_path_person1, self.min_length, swap=True) # frames, 192
                     motion2, motion2_swap = load_motion(file_path_person2, self.min_length, swap=True)
                     if motion1 is None:
                         continue

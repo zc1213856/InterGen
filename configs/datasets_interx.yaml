@@ -1,0 +1,27 @@
+interx:
+    NAME: interx
+    DATA_ROOT: F:\zc_data\Inter-X_Dataset
+    MOTION_REP: global
+    MODE: train
+    CACHE: True
+
+interx_small:
+    NAME: interx
+    DATA_ROOT: F:\zc_data\Inter-X_Dataset
+    MOTION_REP: global
+    MODE: train_small
+    CACHE: True
+
+interx_val:
+    NAME: interx
+    DATA_ROOT: F:\zc_data\Inter-X_Dataset
+    MOTION_REP: global
+    MODE: val
+    CACHE: True
+
+interx_test:
+    NAME: interx
+    DATA_ROOT: F:\zc_data\Inter-X_Dataset
+    MOTION_REP: global
+    MODE: test
+    CACHE: True
